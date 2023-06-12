@@ -22,21 +22,50 @@ const safePluginName = (str: string) =>
     .trim()
     .replace(/\s/g, '_');
 
-export const generateAiPluginJson = async (
+const handleRootPlugin = async (
   req: AppNextApiRequest,
   res: NextApiResponse
 ) => {
   const host = req?.headers?.['host'];
-  const subdomain = getSubdomain(host!);
   const proto = req.headers['x-forwarded-proto'] ? 'https' : 'http';
 
-  if (!subdomain) {
-    return res.status(400).send('Missing subdomain');
-  }
+  const config = {
+    schema_version: 'v1',
+    name_for_model: `Databerry_ai`,
+    name_for_human: 'Databerry.ai',
+    description_for_human:
+      'Extend ChatGPT memory, talk to your data (PDF, WebPage, GDoc, Notion, etc...) stored in Databerry.ai',
+    description_for_model:
+      'Help the user to answer questions about data stored in Databerry.ai, data that is not part of your training data.',
+    auth: {
+      type: 'none',
+      // type: 'user_http',
+      // authorization_type: 'bearer',
+    },
+    api: {
+      type: 'openapi',
+      url: `${proto}://${host}/.well-known/openapi.yaml`,
+      has_user_authentication: false,
+    },
+    logo_url: `${proto}://${host}/.well-known/logo.png`,
+    contact_email: 'support@databerry.ai',
+    legal_info_url: 'support@databerry.ai',
+  };
+
+  return res.json(config);
+};
+
+const handleUserPlugin = async (
+  req: AppNextApiRequest,
+  res: NextApiResponse,
+  datastoreId: string
+) => {
+  const host = req?.headers?.['host'];
+  const proto = req.headers['x-forwarded-proto'] ? 'https' : 'http';
 
   const datastore = await prisma.datastore.findUnique({
     where: {
-      id: subdomain,
+      id: datastoreId,
     },
   });
 
@@ -76,6 +105,26 @@ export const generateAiPluginJson = async (
   };
 
   return res.json(config);
+};
+
+export const generateAiPluginJson = async (
+  req: AppNextApiRequest,
+  res: NextApiResponse
+) => {
+  const host = req?.headers?.['host'];
+  const subdomain = getSubdomain(host!);
+
+  console.log('host', host, subdomain);
+
+  if (!subdomain) {
+    return res.status(400).send('Missing subdomain');
+  }
+
+  if (host === subdomain) {
+    return handleRootPlugin(req, res);
+  }
+
+  return handleUserPlugin(req, res, subdomain);
 };
 
 handler.get(generateAiPluginJson);

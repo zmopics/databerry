@@ -17,17 +17,40 @@ const cors = Cors({
 
 const handler = createApiHandler();
 
-export const generateOpenApiYaml = async (
+const handleRootPlugin = async (
   req: AppNextApiRequest,
   res: NextApiResponse
 ) => {
-  const host = req?.headers?.['host'];
-  const subdomain = getSubdomain(host!);
+  const file = fs.readFileSync(
+    path.resolve(process.cwd(), 'base.openapi.yaml'),
+    'utf8'
+  );
+  const doc = parseDocument(file);
 
-  if (!subdomain) {
-    return res.status(400).send('Missing subdomain');
-  }
+  // doc.setIn(['info', 'title'], datastore.name);
+  // doc.setIn(['info', 'description'], datastore.description);
+  doc.setIn(
+    ['info', 'servers', 0, 'url'],
+    // `https://api.databerry.ai/datastores/query/${datastore.id}`
+    `http://localhost:3000`
+  );
 
+  const str = doc.toString();
+  // .replace(
+  //   `/api/external/datastores/query/{datastoreId}`,
+  //   `/api/external/datastores/query/${datastore.id}`
+  // );
+
+  res.setHeader('Content-Type', 'text/x-yaml');
+
+  return res.send(str);
+};
+
+const handleUserPlugin = async (
+  req: AppNextApiRequest,
+  res: NextApiResponse,
+  subdomain: string
+) => {
   const datastore = await prisma.datastore.findUnique({
     where: {
       id: subdomain,
@@ -54,11 +77,32 @@ export const generateOpenApiYaml = async (
 
   const str = doc
     .toString()
-    .replace('/DATASTORE_QUERY_PATH', `/datastores/query/${datastore.id}`);
+    .replace(
+      `/api/external/datastores/query/{datastoreId}`,
+      `/api/external/datastores/query/${datastore.id}`
+    );
 
   res.setHeader('Content-Type', 'text/x-yaml');
 
   return res.send(str);
+};
+
+export const generateOpenApiYaml = async (
+  req: AppNextApiRequest,
+  res: NextApiResponse
+) => {
+  const host = req?.headers?.['host'];
+  const subdomain = getSubdomain(host!);
+
+  if (!subdomain) {
+    return res.status(400).send('Missing subdomain');
+  }
+
+  if (subdomain === host) {
+    return handleRootPlugin(req, res);
+  }
+
+  return handleUserPlugin(req, res, subdomain);
 };
 
 handler.get(generateOpenApiYaml);

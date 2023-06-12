@@ -170,6 +170,7 @@ const handleQuery = async (
       plan,
     });
   } catch {
+    console.log('Usage limit reached.');
     return;
     // return await CrispClient.website.sendMessageInConversation(
     //   websiteId,

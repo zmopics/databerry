@@ -6,11 +6,18 @@ info:
   servers:
     - url: https://your-app-url.com
 paths:
-  /DATASTORE_QUERY_PATH:
+  /api/external/datastores/query/{datastoreId}:
     post:
       summary: Query
       description: Accepts search query objects array each with query and optional filter. Break down complex questions into sub-questions. Refine results by criteria, e.g. time / source, don't do this often. Split queries if ResponseTooLargeError occurs.
-      operationId: query_query_post
+      operationId: query_post
+      parameters:
+        - in: path
+          name: datastoreId
+          schema:
+            type: string
+          required: true
+          description: ID of the Datastore to query
       requestBody:
         content:
           application/json:
@@ -24,6 +31,26 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/QueryResponse"
+      security:
+        - HTTPBearer: []
+  /api/external/datastores:
+    get:
+      summary: List user Datastores
+      description: List 
+      operationId: list_user_datastores
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ListDatastoresRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListDatastoresResponse"
       security:
         - HTTPBearer: []
 components:
@@ -62,6 +89,42 @@ components:
         score:
           title: Score
           type: number
+    ListDatastoresRequest:
+      title: ListDatastoresRequest
+      required:
+        - query
+      type: object
+      properties:
+        query:
+          title: Query
+          type: string
+        top_k:
+          title: Top K
+          description: The number of text 256 tokens large chunks to return
+          type: integer
+          default: 3
+    ListDatastoresResponse:
+      title: ListDatastoresResponse
+      type: array
+      items:
+        $ref: "#/components/schemas/ListDatastoresResult"
+    ListDatastoresResult:
+      title: ListDatastoresResult
+      required:
+        - id
+        - name
+        - description
+      type: object
+      properties:
+        name:
+          title: Text
+          type: string
+        description:
+          title: Description
+          type: string
+        id:
+          title: ID
+          type: string
   securitySchemes:
     HTTPBearer:
       type: http

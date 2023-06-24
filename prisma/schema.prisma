@@ -122,6 +122,10 @@ model AppDatasource {
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime  @default(now()) @updatedAt @map("updated_at")
 
+  groupId  String?         @map("group_id")
+  group    AppDatasource?  @relation(name: "group", fields: [groupId], references: [id], onDelete: Cascade)
+  children AppDatasource[] @relation("group")
+
   @@map("data_sources")
 }
 
@@ -415,8 +419,6 @@ enum DatasourceType {
   web_site
   text
   file
-  // html
-  // pdf
   // notion
 }
 

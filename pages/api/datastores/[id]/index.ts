@@ -19,6 +19,7 @@ export const getDatastore = async (
   const status = req.query.status as DatasourceStatus;
   const offset = parseInt((req.query.offset as string) || '0');
   const limit = parseInt((req.query.limit as string) || '100');
+  const groupId = (req.query.groupId || null) as string | null;
 
   const datastore = await prisma.datastore.findUnique({
     where: {
@@ -29,6 +30,7 @@ export const getDatastore = async (
         select: {
           datasources: {
             where: {
+              groupId: groupId,
               ...(search
                 ? {
                     name: {
@@ -49,6 +51,7 @@ export const getDatastore = async (
         skip: offset * limit,
         take: limit,
         where: {
+          groupId,
           ...(search
             ? {
                 name: {
@@ -64,6 +67,13 @@ export const getDatastore = async (
         },
         orderBy: {
           lastSynch: 'desc',
+        },
+        include: {
+          _count: {
+            select: {
+              children: true,
+            },
+          },
         },
       },
       apiKeys: true,

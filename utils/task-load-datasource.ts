@@ -119,6 +119,7 @@ const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
           },
           ownerId: datasource?.ownerId,
           datastoreId: datasource?.datastoreId,
+          groupId: datasource?.id,
         })),
       });
     }
@@ -147,9 +148,12 @@ const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
       }))
     );
 
-    await prisma.appDatasource.delete({
+    await prisma.appDatasource.update({
       where: {
         id: datasource.id,
+      },
+      data: {
+        status: DatasourceStatus.synched,
       },
     });
 

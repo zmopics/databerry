@@ -102,6 +102,12 @@ export default function Navigation() {
   const items = React.useMemo(() => {
     return [
       {
+        label: 'Chat',
+        route: RouteNames.CHAT,
+        icon: <ChatBubbleIcon fontSize="small" />,
+        active: router.route === RouteNames.CHAT,
+      },
+      {
         label: 'Agents',
         route: RouteNames.AGENTS,
         icon: <SmartToyRoundedIcon fontSize="small" />,
@@ -128,12 +134,7 @@ export default function Navigation() {
         ),
         active: router.route === RouteNames.LOGS,
       },
-      // {
-      //   label: 'Chat',
-      //   route: RouteNames.CHAT,
-      //   icon: <ChatBubbleIcon fontSize="small" />,
-      //   active: router.route === RouteNames.CHAT,
-      // },
+
       // {
       //   label: 'Apps',
       //   route: RouteNames.APPS,

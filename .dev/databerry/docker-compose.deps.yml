@@ -30,6 +30,10 @@ services:
     extends:
       file: docker-compose.yml
       service: minio
+  # gcp:
+  #   extends:
+  #     file: docker-compose.yml
+  #     service: gcp
 
 volumes:
   pgdb-data:
@@ -38,3 +42,4 @@ volumes:
   redis-conf:
   p3x-redis-ui-settings:
   minio:
+  # gcp:

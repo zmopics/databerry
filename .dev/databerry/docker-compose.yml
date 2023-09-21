@@ -88,6 +88,11 @@ services:
     volumes:
       - 'minio:/data/minio'
     command: minio server /data/minio --console-address ":9090"
+  # gcp:
+  #   image: gcr.io/google.com/cloudsdktool/google-cloud-cli:latest
+  #   ports:
+  #     - '8085:8085'
+  #   command: gcloud beta emulators pubsub start --project=${GCP_PROJECT_ID}
 
 volumes:
   pgdb-data:
@@ -97,3 +102,4 @@ volumes:
   p3x-redis-ui-settings:
   minio:
   node_modules:
+  # gcp:

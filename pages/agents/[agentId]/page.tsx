@@ -14,6 +14,7 @@ import {
 import Avatar from '@mui/joy/Avatar';
 import colors from '@mui/joy/colors';
 import { Agent, Prisma } from '@prisma/client';
+import { isCuid } from 'cuid';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { SessionProvider } from 'next-auth/react';
@@ -602,6 +603,8 @@ export async function getStaticProps({
 }) {
   let agent = null;
 
+  console.log('CALLELED ----------------->', agentId);
+
   if (agentId.startsWith('@')) {
     const handle = agentId.replace('@', '');
 
@@ -610,10 +613,19 @@ export async function getStaticProps({
         handle,
       },
     });
-  } else {
+  } else if (isCuid(agentId)) {
     agent = await prisma.agent.findUnique({
       where: {
         id: agentId,
+      },
+    });
+  } else {
+    // custom domain
+    // TODO: retrieve id from custom domain
+    const id = 'cljbv4k010001dg0ug9812757';
+    agent = await prisma.agent.findUnique({
+      where: {
+        id,
       },
     });
   }

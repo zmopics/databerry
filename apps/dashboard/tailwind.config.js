@@ -1,22 +1,15 @@
-const defaultTheme = require('tailwindcss/defaultTheme');
+// // tailwind config is required for editor support
 
-/** @type {import('tailwindcss').Config} */
+// import type { Config } from 'tailwindcss';
+
+// import sharedConfig from '@chaindesk/tailwind-config';
+
+// const config: Pick<Config, 'presets'> = {
+//   presets: [sharedConfig],
+// };
+
+// export default config;
+
 module.exports = {
-  darkMode: 'class',
-  content: [
-    './app/**/*.{js,ts,jsx,tsx}',
-    './pages/**/*.{js,ts,jsx,tsx}',
-    './components/**/*.{js,ts,jsx,tsx}',
-  ],
-  theme: {
-    extend: {
-      fontFamily: {
-        sans: ['"Josefin Sans"', ...defaultTheme.fontFamily.sans],
-      },
-    },
-  },
-  plugins: [require('@tailwindcss/typography')],
-  corePlugins: {
-    preflight: false,
-  },
+  presets: [require('@chaindesk/tailwind-config')],
 };

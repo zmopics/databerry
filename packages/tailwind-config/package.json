@@ -1,0 +1,12 @@
+{
+  "name": "@chaindesk/tailwind-config",
+  "version": "0.0.0",
+  "private": true,
+  "main": "index.js",
+  "types": "index.js",
+  "devDependencies": {
+    "@tailwindcss/typography": "^0.5.9",
+    "@types/node": "18.15.10",
+    "tailwindcss": "^3.2.7"
+  }
+}

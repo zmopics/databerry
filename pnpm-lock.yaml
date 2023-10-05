@@ -62,6 +62,9 @@ importers:
       '@chaindesk/prisma':
         specifier: workspace:*
         version: link:../../packages/prisma
+      '@chaindesk/tailwind-config':
+        specifier: workspace:*
+        version: link:../../packages/tailwind-config
       '@emotion/cache':
         specifier: ^11.10.5
         version: 11.11.0
@@ -381,6 +384,15 @@ importers:
       tsx:
         specifier: ^3.13.0
         version: 3.13.0
+
+  apps/landing-page:
+    devDependencies:
+      '@chaindesk/tsconfig':
+        specifier: workspace:*
+        version: link:../../packages/tsconfig
+      eslint-config-custom:
+        specifier: workspace:*
+        version: link:../../packages/eslint-config-custom
 
   packages/chat-bubble: {}
 
@@ -720,6 +732,18 @@ importers:
       typescript:
         specifier: 5.0.2
         version: 5.0.2
+
+  packages/tailwind-config:
+    devDependencies:
+      '@tailwindcss/typography':
+        specifier: ^0.5.9
+        version: 0.5.9(tailwindcss@3.2.7)
+      '@types/node':
+        specifier: 18.15.10
+        version: 18.15.10
+      tailwindcss:
+        specifier: ^3.2.7
+        version: 3.2.7(postcss@8.4.21)(ts-node@10.9.1)
 
   packages/tsconfig: {}
 
@@ -5076,7 +5100,6 @@ packages:
       lodash.merge: 4.6.2
       postcss-selector-parser: 6.0.10
       tailwindcss: 3.2.7(postcss@8.4.21)(ts-node@10.9.1)
-    dev: false
 
   /@tanstack/react-virtual@3.0.0-beta.54(react@18.2.0):
     resolution: {integrity: sha512-D1mDMf4UPbrtHRZZriCly5bXTBMhylslm4dhcHqTtDJ6brQcgGmk8YD9JdWBGWfGSWPKoh2x1H3e7eh+hgPXtQ==}
@@ -12767,7 +12790,6 @@ packages:
 
   /lodash.castarray@4.4.0:
     resolution: {integrity: sha512-aVx8ztPv7/2ULbArGJ2Y42bG1mEQ5mGjpdvrbJcJFU3TbYybe+QlLS4pst9zV52ymy2in1KpFPiZnAOATxD4+Q==}
-    dev: false
 
   /lodash.clonedeep@4.5.0:
     resolution: {integrity: sha512-H5ZhCF25riFd9uB5UCkVKo61m3S/xZk1x4wA6yp/L3RFP6Z/eHH1ymQcGLo7J3GMPfm0V/7m1tryHuGVxpqEBQ==}
@@ -15075,7 +15097,6 @@ packages:
     dependencies:
       cssesc: 3.0.0
       util-deprecate: 1.0.2
-    dev: false
 
   /postcss-selector-parser@6.0.11:
     resolution: {integrity: sha512-zbARubNdogI9j7WY4nQJBiNqQf3sLS3wCP4WfOidu+p28LofJqDH1tcXypGrcmMHhDk2t9wGhCsYe/+szLTy1g==}

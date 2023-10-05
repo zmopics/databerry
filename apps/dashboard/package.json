@@ -33,6 +33,7 @@
     "@chaindesk/emails": "workspace:*",
     "@chaindesk/lib": "workspace:*",
     "@chaindesk/prisma": "workspace:*",
+    "@chaindesk/tailwind-config": "workspace:*",
     "@emotion/cache": "^11.10.5",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",

@@ -1,0 +1,12 @@
+{
+  "name": "landing-page",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "next": "13.2.4"
+  },
+  "devDependencies": {
+    "@chaindesk/tsconfig": "workspace:*",
+    "eslint-config-custom": "workspace:*"
+  }
+}

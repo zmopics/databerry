@@ -312,6 +312,7 @@ export default function Navigation() {
     <Stack sx={{ height: '100%' }}>
       <List size="sm" sx={{ '--ListItem-radius': '8px' }}>
         <ListItem nested>
+          {product === 'commerce' && <h1>For Commerce</h1>}
           {/* <ListSubheader>
           Browse
           <IconButton

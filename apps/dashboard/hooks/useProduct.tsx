@@ -1,4 +1,9 @@
-export type ProductType = 'chaindesk' | 'cs' | 'chat' | 'blablaform';
+export type ProductType =
+  | 'chaindesk'
+  | 'cs'
+  | 'chat'
+  | 'blablaform'
+  | 'commerce';
 import React, { useContext, useEffect } from 'react';
 import { createContext } from 'react';
 
@@ -19,9 +24,11 @@ export const getProductFromHostname = (hostname?: string): ProductType => {
     )
   ) {
     return 'chat';
-  }
-  // ['agents.localhost', 'localhost'].includes(window.location.hostname)
-  else {
+  } else if (
+    ['commerce.localhost', 'commerce.localhost:3000'].includes(hostname)
+  ) {
+    return 'commerce';
+  } else {
     return 'chaindesk';
   }
 };

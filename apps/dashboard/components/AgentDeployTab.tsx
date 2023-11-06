@@ -10,7 +10,7 @@ import axios from 'axios';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import useAgent from '@app/hooks/useAgent';
 import useModal from '@app/hooks/useModal';
@@ -86,13 +86,103 @@ function AgentDeployTab(props: Props) {
   });
 
   const agent = query?.data;
+  const appId = '2606178422868746'; // replace with your actual Facebook App ID
+  const configId = '1847795065634880';
 
+  useEffect(() => {
+    window.fbAsyncInit = function () {
+      window.FB.init({
+        appId: appId,
+        cookie: true,
+        xfbml: true,
+        version: 'v18.0',
+      });
+    };
+
+    // Load the Facebook SDK script asynchronously
+    (function (d, s, id) {
+      var js,
+        fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s);
+      js.id = id;
+      js.src = 'https://connect.facebook.net/en_US/sdk.js';
+      fjs.parentNode.insertBefore(js, fjs);
+    })(document, 'script', 'facebook-jssdk');
+  }, []); // Empty dependency array ensures this runs once after the initial render
+
+  const launchWhatsAppSignup = () => {
+    window.fbq &&
+      window.fbq('trackCustom', 'WhatsAppOnboardingStart', {
+        appId: appId,
+        feature: 'whatsapp_embedded_signup',
+      });
+
+    window.FB.login(
+      function (response) {
+        if (response.authResponse) {
+          const code = response.authResponse.code;
+          console.log('success', response.authResponse);
+          const callApi = async () => {
+            const resp = await axios.post('/api/integrations/whatsapp', {
+              ...response.authResponse,
+            });
+            console.log(resp);
+          };
+          callApi();
+        } else {
+          console.log(
+            'User cancelled login or did not fully authorize.',
+            response
+          );
+        }
+      },
+      {
+        config_id: configId,
+        response_type: 'code',
+        override_default_response_type: true,
+        redirect_uri: 'https://localhost:3000/test',
+        extras: {
+          setup: {
+            // Prefilled data can go here
+          },
+        },
+      }
+    );
+  };
+
+  const handleFBLogin = () => {
+    FB?.login(
+      (response) => {
+        if (response.authResponse) {
+          console.log('Success:', response);
+          const callApi = async () => {
+            const resp = await axios.post('/api/integrations/whatsapp', {
+              ...response.authResponse,
+            });
+            console.log(resp);
+          };
+          callApi();
+
+          // Send the response.authResponse.code to your backend
+        } else {
+          console.log('User cancelled login or did not fully authorize.');
+        }
+      },
+      {
+        scope: 'whatsapp_business_management,whatsapp_business_messaging',
+        config_id: '1847795065634880',
+        response_type: 'code',
+      }
+    );
+  };
   if (!agent) {
     return null;
   }
 
   return (
     <>
+      <div id="fb-root"></div>
       <SettingCard
         title="Deploy"
         description="Deploy your agent with the following widgets or integrations"
@@ -231,6 +321,25 @@ function AgentDeployTab(props: Props) {
                 );
               },
             },
+            {
+              name: 'Whatsapp',
+              isPremium: false,
+              icon: (
+                <img
+                  className="w-8"
+                  src="https://images.ctfassets.net/lzny33ho1g45/6YoKV9RS3goEx54iFv96n9/78100cf9cba971d04ac52d927489809a/logo-symbol.png"
+                  alt="zapier logo"
+                ></img>
+              ),
+
+              action: () => {
+                try {
+                  handleFBLogin();
+                } catch (e) {
+                  console.log('nada', e);
+                }
+              },
+            },
           ].map((each, index, arr) => (
             <ListItem
               key={index}
@@ -308,6 +417,7 @@ function AgentDeployTab(props: Props) {
           ))}
         </List>
       </SettingCard>
+      <button onClick={launchWhatsAppSignup}>Click me</button>
 
       {query?.data?.id! && (
         <>

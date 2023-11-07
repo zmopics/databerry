@@ -24,6 +24,7 @@ import * as React from 'react';
 import useSWR from 'swr';
 
 import AgentForm from '@app/components/AgentForm';
+import axios from 'axios';
 import GeneralInput from '@app/components/AgentInputs/GeneralInput';
 import ToolsInput from '@app/components/AgentInputs/ToolsInput';
 import AgentTable from '@app/components/AgentTable';
@@ -42,6 +43,8 @@ import { Agent, Prisma } from '@chaindesk/prisma';
 import { getAgents } from '../api/agents';
 import { getDatastores } from '../api/datastores';
 
+import { usePathname, useSearchParams } from 'next/navigation';
+
 export default function AgentsPage() {
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -58,6 +61,43 @@ export default function AgentsPage() {
     '/api/agents',
     fetcher
   );
+
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  async function fetchToken(url: string, payload: any) {
+    await axios.post(url, payload).then((response) => {
+      let accessToken = response.data.access_token;
+      console.log('shop token ' + accessToken);
+    });
+  }
+
+  React.useEffect(() => {
+    const code = searchParams.get('code');
+    const hmac = searchParams.get('hmac');
+    const host = searchParams.get('host');
+    const shop = searchParams.get('shop');
+
+    var appId = process.env.SHOPIFY_APP_ID;
+    var appSecret = process.env.SHOPIFY_APP_SECRET;
+
+    const regex = /^[a-z\d_.-]+[.]myshopify[.]com$/;
+
+    if (code && hmac && host && shop) {
+      // if (regex) {
+      //Exchange temporary code for a permanent access token
+      let accessTokenRequestUrl =
+        'https://' + shop + '/admin/oauth/access_token';
+      let accessTokenPayload = {
+        client_id: appId,
+        client_secret: appSecret,
+        code,
+      };
+
+      fetchToken(accessTokenRequestUrl, accessTokenPayload);
+      // }
+    }
+  }, [pathname, searchParams]);
 
   return (
     <Box
@@ -199,7 +239,6 @@ export default function AgentsPage() {
                 >
                   <ToolsInput />
                 </SettingCard>
-
                 <Button
                   type="submit"
                   variant="solid"

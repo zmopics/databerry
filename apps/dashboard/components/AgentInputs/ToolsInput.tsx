@@ -30,6 +30,8 @@ import {
   Prisma,
   ToolType,
 } from '@chaindesk/prisma';
+import Image from 'next/image';
+
 type Props = {};
 
 const CreateDatastoreModal = dynamic(
@@ -44,6 +46,16 @@ type ToolCardProps = Partial<NormalizedTool> & {
   onClick?: any;
   link?: string;
 };
+
+function startShopifyOAuth() {
+  var appId = process.env.SHOPIFY_APP_ID;
+  var appScope = process.env.SHOPIFY_APP_SCOPE;
+  var appDomain = process.env.SHOPIFY_APP_DOMAIN;
+
+  var installUrl = `https://shopify.com/admin/oauth/authorize?client_id=${appId}&scope=${appScope}&redirect_uri=http://${appDomain}/agents`;
+
+  window.location.replace(installUrl);
+}
 
 const ToolCard = (props: ToolCardProps) => {
   return (
@@ -165,9 +177,24 @@ function ToolsInput({}: Props) {
         </IconButton>
       </ToolCard>
 
+      <ToolCard
+        id="43"
+        name={'Shopify'}
+        description={'Connect custom data to your Agent'}
+        onClick={() => startShopifyOAuth()}
+      >
+        <Image
+          src="https://www.svgrepo.com/show/303503/shopify-logo.svg"
+          alt="Shopify"
+          width={20}
+          height={20}
+          className="w-5 ml-2"
+        />
+      </ToolCard>
+
       <newDatastoreModal.component
         title="Datastore"
-        description="Connect a Datastore to your Agent."
+        description="Connect a Shopify domain to your Agent."
         dialogProps={{
           sx: {
             maxWidth: 'sm',

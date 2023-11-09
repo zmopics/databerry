@@ -52,8 +52,6 @@ function startShopifyOAuth() {
   var appScope = process.env.NEXT_SHOPIFY_APP_SCOPE;
   var appDomain = process.env.NEXT_SHOPIFY_APP_DOMAIN;
 
-  // var installUrl = `https://shopify.com/admin/oauth/authorize?client_id=6609288812b0e33958f87083ac4732dd&scope=read_products,read_shipping,read_orders&redirect_uri=http://commerce.localhost:3000/api/integrations/shopify/oauth-callback`;
-
   var installUrl = `https://shopify.com/admin/oauth/authorize?client_id=${appId}&scope=${appScope}&redirect_uri=http://${appDomain}/api/integrations/shopify/oauth-callback`;
 
   window.open(installUrl);

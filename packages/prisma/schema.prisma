@@ -560,11 +560,13 @@ enum DatasourceType {
   notion
   notion_page
   qa
+  shopify
 }
 
 enum ServiceProviderType {
   google_drive
   notion
+  shopify
 }
 
 enum DatastoreType {

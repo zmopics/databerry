@@ -13,6 +13,7 @@ import Select from '@mui/joy/Select';
 import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
 import Link from 'next/link';
 import React, { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
@@ -30,7 +31,6 @@ import {
   Prisma,
   ToolType,
 } from '@chaindesk/prisma';
-import Image from 'next/image';
 
 type Props = {};
 
@@ -48,13 +48,15 @@ type ToolCardProps = Partial<NormalizedTool> & {
 };
 
 function startShopifyOAuth() {
-  var appId = process.env.SHOPIFY_APP_ID;
-  var appScope = process.env.SHOPIFY_APP_SCOPE;
-  var appDomain = process.env.SHOPIFY_APP_DOMAIN;
+  var appId = process.env.NEXT_SHOPIFY_APP_ID;
+  var appScope = process.env.NEXT_SHOPIFY_APP_SCOPE;
+  var appDomain = process.env.NEXT_SHOPIFY_APP_DOMAIN;
 
-  var installUrl = `https://shopify.com/admin/oauth/authorize?client_id=${appId}&scope=${appScope}&redirect_uri=http://${appDomain}/agents`;
+  // var installUrl = `https://shopify.com/admin/oauth/authorize?client_id=6609288812b0e33958f87083ac4732dd&scope=read_products,read_shipping,read_orders&redirect_uri=http://commerce.localhost:3000/api/integrations/shopify/oauth-callback`;
 
-  window.location.replace(installUrl);
+  var installUrl = `https://shopify.com/admin/oauth/authorize?client_id=${appId}&scope=${appScope}&redirect_uri=http://${appDomain}/api/integrations/shopify/oauth-callback`;
+
+  window.open(installUrl);
 }
 
 const ToolCard = (props: ToolCardProps) => {
@@ -157,25 +159,6 @@ function ToolsInput({}: Props) {
           </ToolCard>
         ))}
       </Stack>
-
-      <Divider sx={{ my: 2 }} />
-
-      <ToolCard
-        id="42"
-        name={'Datastore'}
-        description={'Connect custom data to your Agent'}
-      >
-        <IconButton
-          size="sm"
-          variant="plain"
-          color="success"
-          onClick={() => {
-            newDatastoreModal.open();
-          }}
-        >
-          <AddCircleOutlineRoundedIcon />
-        </IconButton>
-      </ToolCard>
 
       <ToolCard
         id="43"

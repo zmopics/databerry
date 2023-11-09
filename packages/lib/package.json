@@ -27,6 +27,7 @@
     "google-auth-library": "^8.7.0",
     "googleapis": "^118.0.0",
     "hash-wasm": "^4.9.0",
+    "hmac-validator": "^0.1.0",
     "ioredis": "^5.3.1",
     "js-tiktoken": "^1.0.7",
     "jszip": "^3.10.1",

@@ -17,8 +17,8 @@ export const auth = async (req: AppNextApiRequest, res: NextApiResponse) => {
   const host = req.query.host as string;
   const shop = req.query.shop as string;
 
-  var appId = process.env.NEXT_SHOPIFY_APP_ID;
-  var appSecret = process.env.NEXT_SHOPIFY_APP_SECRET;
+  var appId = process.env.NEXT_PUBLIC_SHOPIFY_APP_ID;
+  var appSecret = process.env.NEXT_PUBLIC_SHOPIFY_APP_SECRET;
 
   const regex = /^[a-z\d_.-]+[.]myshopify[.]com$/;
 
@@ -57,24 +57,52 @@ export const auth = async (req: AppNextApiRequest, res: NextApiResponse) => {
         .then(async (response) => {
           let accessToken = response.data.access_token;
 
-          await prisma.serviceProvider.create({
-            data: {
-              type: ServiceProviderType.shopify,
-              name: null,
-              accessToken: accessToken,
-              refreshToken: null,
-              organization: {
-                connect: {
-                  id: session?.organization?.id,
+          // Check if service provider already exists
+          const existingShopifyProvider = await prisma.serviceProvider.findMany(
+            {
+              where: {
+                type: 'shopify',
+                name: shop,
+              },
+            }
+          );
+
+          if (!existingShopifyProvider) {
+            // If not create a new one
+            await prisma.serviceProvider.create({
+              data: {
+                type: ServiceProviderType.shopify,
+                name: shop,
+                accessToken: accessToken,
+                refreshToken: null,
+                organization: {
+                  connect: {
+                    id: session?.organization?.id,
+                  },
                 },
               },
-            },
-          });
+            });
 
-          res.redirect('/close-window');
+            res.redirect('/close-window');
+          } else {
+            // Update existing one
+            await prisma.serviceProvider.updateMany({
+              where: {
+                type: 'shopify',
+                name: shop,
+              },
+              data: {
+                type: ServiceProviderType.shopify,
+                name: shop,
+                accessToken: accessToken,
+                refreshToken: null,
+              },
+            });
+            res.redirect('/close-window');
+          }
         })
-        .catch((error) => {
-          console.log(error);
+        .catch(() => {
+          // TODO: Handle error
           res.redirect('/close-window');
         });
     }

@@ -48,11 +48,11 @@ type ToolCardProps = Partial<NormalizedTool> & {
 };
 
 function startShopifyOAuth() {
-  var appId = process.env.NEXT_SHOPIFY_APP_ID;
-  var appScope = process.env.NEXT_SHOPIFY_APP_SCOPE;
-  var appDomain = process.env.NEXT_SHOPIFY_APP_DOMAIN;
+  var appId = process.env.NEXT_PUBLIC_SHOPIFY_APP_ID;
+  var appScope = process.env.NEXT_PUBLIC_SHOPIFY_APP_SCOPE;
+  var appDomain = process.env.NEXT_PUBLIC_SHOPIFY_APP_DOMAIN;
 
-  var installUrl = `https://shopify.com/admin/oauth/authorize?client_id=${appId}&scope=${appScope}&redirect_uri=http://${appDomain}/api/integrations/shopify/oauth-callback`;
+  var installUrl = `https://shopify.com/admin/oauth/authorize?client_id=${appId}&scope=${appScope}&redirect_uri=${appDomain}/api/integrations/shopify/oauth-callback`;
 
   window.open(installUrl);
 }
@@ -157,7 +157,6 @@ function ToolsInput({}: Props) {
           </ToolCard>
         ))}
       </Stack>
-
       <ToolCard
         id="43"
         name={'Shopify'}

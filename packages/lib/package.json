@@ -5,7 +5,9 @@
   "main": "./index.ts",
   "types": "./index.ts",
   "scripts": {
-    "lint": "eslint --fix ."
+    "lint": "eslint --fix .",
+    "shopifybuild": "pnpm install && shopify app build --skip-dependencies-installation",
+    "shopify:dev": "pnpm install && shopify app dev --skip-dependencies-installation"
   },
   "dependencies": {
     "@axiomhq/pino": "^0.1.3",
@@ -13,6 +15,8 @@
     "@chaindesk/prisma": "workspace:*",
     "@chaindesk/tsconfig": "workspace:*",
     "@notionhq/client": "^2.2.13",
+    "@shopify/app": "^3.50.2",
+    "@shopify/cli": "^3.50.2",
     "@slack/web-api": "^6.8.1",
     "@xmldom/xmldom": "^0.8.7",
     "aws-sdk": "^2.1343.0",

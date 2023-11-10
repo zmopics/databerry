@@ -1,0 +1,19 @@
+{%- if block.settings.id -%}
+<script
+    defer
+    id={{block.settings.id}} 
+    data-name="databerry-chat-bubble"
+    src="https://cdn.jsdelivr.net/npm/@databerry/chat-bubble@latest"
+  ></script>
+{%- endif -%}
+{% schema %}
+  {
+    "name": "Chaindesk",
+    "target": "head",
+    "settings": [
+        { "label": "Widget Id", "id": "id", "type": "text", "default": "clmce8m1p002h74r57664hcxz" }
+    ]
+  }
+{% endschema %}
+
+

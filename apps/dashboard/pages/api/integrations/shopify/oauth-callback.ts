@@ -20,6 +20,10 @@ export const auth = async (req: AppNextApiRequest, res: NextApiResponse) => {
   var appId = process.env.NEXT_PUBLIC_SHOPIFY_APP_ID;
   var appSecret = process.env.NEXT_PUBLIC_SHOPIFY_APP_SECRET;
 
+  var embedAppId = process.env.NEXT_PUBLIC_SHOPIFY_EMBED_APP_ID;
+  var embedAppHandle = process.env.NEXT_PUBLIC_SHOPIFY_EMBED_APP_HANDLE;
+  var templateId = process.env.NEXT_PUBLIC_SHOPIFY_APP_TEMPLATE_ID;
+
   const regex = /^[a-z\d_.-]+[.]myshopify[.]com$/;
 
   var validate = hmacValidator({
@@ -83,7 +87,9 @@ export const auth = async (req: AppNextApiRequest, res: NextApiResponse) => {
               },
             });
 
-            res.redirect('/close-window');
+            var activationUrl = `https://${shop}/admin/themes/current/editor?context=apps&template=${templateId}&activateAppId=${embedAppId}/${embedAppHandle}`;
+            res.redirect(activationUrl);
+            //  res.redirect('/close-window');
           } else {
             // Update existing one
             await prisma.serviceProvider.updateMany({
@@ -98,7 +104,10 @@ export const auth = async (req: AppNextApiRequest, res: NextApiResponse) => {
                 refreshToken: null,
               },
             });
-            res.redirect('/close-window');
+
+            var activationUrl = `https://${shop}/admin/themes/current/editor?context=apps&template=${templateId}&activateAppId=${embedAppId}/${embedAppHandle}`;
+            res.redirect(activationUrl);
+            // res.redirect('/close-window');
           }
         })
         .catch(() => {

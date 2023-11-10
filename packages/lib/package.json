@@ -6,8 +6,9 @@
   "types": "./index.ts",
   "scripts": {
     "lint": "eslint --fix .",
+    "shopify:dev": "pnpm install && shopify app dev --skip-dependencies-installation",
     "shopifybuild": "pnpm install && shopify app build --skip-dependencies-installation",
-    "shopify:dev": "pnpm install && shopify app dev --skip-dependencies-installation"
+    "shopify:deploy": "pnpm install && shopify app deploy"
   },
   "dependencies": {
     "@axiomhq/pino": "^0.1.3",

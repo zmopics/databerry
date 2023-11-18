@@ -573,6 +573,7 @@ enum ServiceProviderType {
   website
   crisp
   slack
+  zendesk
 }
 
 enum DatastoreType {

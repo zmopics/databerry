@@ -6,6 +6,7 @@ import Button from '@mui/joy/Button';
 import Chip from '@mui/joy/Chip';
 import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
+import axios from 'axios';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
@@ -15,6 +16,7 @@ import useAgent from '@app/hooks/useAgent';
 import useModal from '@app/hooks/useModal';
 import useStateReducer from '@app/hooks/useStateReducer';
 
+import { IntegrationSettingsMap } from '@chaindesk/integrations/import.browser';
 import { AgentVisibility, DatastoreVisibility } from '@chaindesk/prisma';
 
 import SettingCard from './ui/SettingCard';
@@ -209,6 +211,26 @@ function AgentDeployTab(props: Props) {
                 );
               },
             },
+            {
+              name: 'Zendesk',
+              isPremium: false,
+              icon: (
+                <img
+                  className="w-8"
+                  src="https://images.ctfassets.net/lzny33ho1g45/6YoKV9RS3goEx54iFv96n9/78100cf9cba971d04ac52d927489809a/logo-symbol.png"
+                  alt="zapier logo"
+                ></img>
+              ),
+
+              action: async () => {
+                const { data } = await axios.get(
+                  `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/api/integrations/zendesk/add`
+                );
+
+                console.log('url-------------->', data.url);
+                // window.open(data.url, '_blank', 'width=800,height=800');
+              },
+            },
           ].map((each, index, arr) => (
             <ListItem
               key={index}
@@ -286,6 +308,8 @@ function AgentDeployTab(props: Props) {
           ))}
         </List>
       </SettingCard>
+
+      {<IntegrationSettingsMap.zendesk />}
 
       {query?.data?.id! && (
         <>

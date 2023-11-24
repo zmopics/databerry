@@ -5,7 +5,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = "postgresql://admin:password@localhost:5432/databerry" //env("DATABASE_URL")
 }
 
 model Organization {
@@ -560,7 +560,8 @@ enum DatasourceType {
   notion
   notion_page
   qa
-  shopify
+  shopify_shop
+  shopify_product
 }
 
 enum ServiceProviderType {

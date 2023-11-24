@@ -163,6 +163,20 @@ export const DatasourceSchema = z.discriminatedUnion('type', [
     type: z.literal(DatasourceType.qa),
     config: QAConfig.optional(),
   }),
+  DatasourceBaseSchema.extend({
+    type: z.literal(DatasourceType.shopify_shop),
+    config: DatasourceConfigBaseSchema.extend({
+      serviceProviderId: z.string().min(1),
+      shopDomain: z.string().min(1),
+    }),
+  }),
+  DatasourceBaseSchema.extend({
+    type: z.literal(DatasourceType.shopify_product),
+    config: DatasourceConfigBaseSchema.extend({
+      serviceProviderId: z.string().min(1),
+      productId: z.string().min(1),
+    }),
+  }),
 ]);
 
 export type DatasourceSchema = z.infer<typeof DatasourceSchema>;
@@ -176,6 +190,10 @@ export type DatasourceWebSite = Extract<DatasourceSchema, { type: 'web_site' }>;
 export type DatasourceGoogleDrive = Extract<
   DatasourceSchema,
   { type: 'google_drive_file' | 'google_drive_folder' }
+>;
+export type DatasourceShopify = Extract<
+  DatasourceSchema,
+  { type: 'shopify_shop' | 'shopify_product' }
 >;
 
 export const AgentInterfaceConfig = z.object({

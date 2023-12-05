@@ -83,6 +83,7 @@ export enum ChainType {
 export enum AppEventType {
   MARKED_AS_RESOLVED = 'MAKRED_AS_RESOLVED',
   HUMAN_REQUESTED = 'HUMAN_REQUESTED',
+  NEW_MESSAGE = 'NEW_MESSAGE',
 }
 
 export type AppEvent =
@@ -103,6 +104,14 @@ export type AppEvent =
         visitorEmail: string;
         conversation: Conversation;
         messages: Message[];
+        credentials: ServiceProvider;
+      };
+    }
+  | {
+      type: AppEventType.NEW_MESSAGE;
+      payload: {
+        message: Message;
+        conversation: Conversation;
         credentials: ServiceProvider;
       };
     };

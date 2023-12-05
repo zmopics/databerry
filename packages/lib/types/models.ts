@@ -247,3 +247,17 @@ export const AgentInterfaceConfig = z.object({
 });
 
 export type AgentInterfaceConfig = z.infer<typeof AgentInterfaceConfig>;
+
+export const MessageMetadataSchema = z.object({
+  displayName: z.string().optional(),
+  profilePicture: z.string().optional(),
+  zendesk: z
+    .object({
+      commentId: z.number(),
+      from: z.object({
+        role: z.enum(['end-user', 'agent', 'admin']),
+      }),
+    })
+    .optional(),
+});
+export type MessageMetadataSchema = z.infer<typeof MessageMetadataSchema>;

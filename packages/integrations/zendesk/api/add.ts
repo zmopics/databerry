@@ -12,6 +12,7 @@ import {
 
 import getHttpClient from '../lib/get-http-client';
 import defaultAddServiceProvider from '../../_utils/default-add-service-provider';
+import { ServiceProviderType } from '@chaindesk/prisma';
 
 const handler = createAuthApiHandler();
 
@@ -38,6 +39,7 @@ const createCredentials = async (
   const config = req.body.config as ServiceProviderZendesk['config'];
 
   return defaultAddServiceProvider<ServiceProviderZendesk['config']>({
+    type: ServiceProviderType.zendesk,
     config,
     session: req.session,
     agentId: req.query.agentId as string,

@@ -1,6 +1,8 @@
 import cuid from 'cuid';
 import { NextApiRequest, NextApiResponse } from 'next';
 
+import IntegrationsEventDispatcher from '@app/utils/integrations-event-dispatcher';
+
 import { NewConversation, render } from '@chaindesk/emails';
 import AgentManager from '@chaindesk/lib/agent';
 import { AnalyticsEvents, capture } from '@chaindesk/lib/analytics-server';
@@ -23,10 +25,15 @@ import pipe from '@chaindesk/lib/middlewares/pipe';
 import rateLimit from '@chaindesk/lib/middlewares/rate-limit';
 import runMiddleware from '@chaindesk/lib/run-middleware';
 import streamData from '@chaindesk/lib/stream-data';
-import { AppNextApiRequest, SSE_EVENT } from '@chaindesk/lib/types';
+import {
+  AppEventType,
+  AppNextApiRequest,
+  SSE_EVENT,
+} from '@chaindesk/lib/types';
 import { ChatRequest } from '@chaindesk/lib/types/dtos';
 import {
   AgentVisibility,
+  Conversation,
   ConversationChannel,
   MembershipRole,
   MessageFrom,
@@ -55,6 +62,7 @@ export const chatAgentRequest = async (
       id,
     },
     include: {
+      serviceProviders: true,
       organization: {
         include: {
           ...sessionOrganizationInclude,
@@ -203,6 +211,14 @@ export const chatAgentRequest = async (
   });
 
   await conversationManager.save();
+  IntegrationsEventDispatcher.dispatch(agent?.serviceProviders, {
+    type: AppEventType.NEW_MESSAGE,
+    payload: {
+      // agent: conversation?.agent as Agent,
+      // conversation: conversation as Conversation,
+      // messages: updated?.messages,
+    },
+  });
 
   // Send new conversation notfication from website visitor
   const ownerEmail = agent?.organization?.memberships?.[0]?.user?.email;

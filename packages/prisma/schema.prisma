@@ -75,6 +75,8 @@ model User {
   usage         Usage?
   conversations Conversation[]
 
+  // participants ConversationParticipant[]
+
   serviceProviders ServiceProvider[]
 
   memberships Membership[]
@@ -234,6 +236,8 @@ model Agent {
   externalIntegration ExternalIntegration[]
   serviceProviders    ServiceProvider[]
 
+  // participants ConversationParticipant[]
+
   nbQueries Int? @default(0) @map("nb_queries")
 
   interfaceConfig Json? @map("interface_config")
@@ -262,6 +266,8 @@ model Domain {
   @@map("domains")
 }
 
+
+
 model Conversation {
   id        String  @id @default(cuid())
   visitorId String? @map("visitor_id")
@@ -271,6 +277,8 @@ model Conversation {
   agent    Agent?    @relation(fields: [agentId], references: [id], onDelete: Cascade)
   agentId  String?   @map("agent_id")
   messages Message[]
+
+  // participants ConversationParticipant[]
 
   channel ConversationChannel @default(dashboard)
 
@@ -290,6 +298,25 @@ model Conversation {
   @@map("conversations")
 }
 
+// model ConversationParticipant {
+//   id        String  @id @default(cuid())
+
+//   type ConversationParticipantType
+
+//   agentId  String?   @map("agent_id")
+//   agent    Agent?    @relation(fields: [agentId], references: [id], onDelete: Cascade)
+
+//   userId    String? @map("user_id")
+//   user      User?   @relation(fields: [userId], references: [id])
+
+//   conversationId String?       @map("conversation_id")
+//   conversation   Conversation? @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+//   metadata Json?
+
+//   @@map("conversation_participants")
+// }
+
 model Message {
   id             String        @id @default(cuid())
   text           String
@@ -298,6 +325,7 @@ model Message {
   conversation   Conversation? @relation(fields: [conversationId], references: [id], onDelete: Cascade)
   sources        Json?
   usage          Json?
+  metadata       Json?
 
   eval MessageEval?
 
@@ -699,4 +727,10 @@ enum ConversationStatus {
      RESOLVED
      UNRESOLVED
      HUMAN_REQUESTED
+}
+
+enum ConversationParticipantType {
+  AGENT
+  USER
+  EXTERNAL
 }

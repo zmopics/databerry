@@ -57,3 +57,31 @@ export const handleMarkedAsResolved = async (
     console.log('No ticket found for conversation', data?.conversation?.id);
   }
 };
+
+export const handleNewMessage = async (
+  data: Extract<AppEvent, { type: AppEventType.NEW_MESSAGE }>['payload']
+) => {
+  if (data?.conversation?.status !== 'HUMAN_REQUESTED') {
+    return;
+  }
+
+  const client = getHttpClient(data?.credentials?.config as any);
+
+  const res = await client.post(
+    `/api/v2/tickets?external_id=${data?.conversation?.id}`
+  );
+
+  const ticketId = res.data?.tickets?.[0]?.id;
+  if (ticketId) {
+    await client.put(`/api/v2/tickets/${ticketId}`, {
+      ticket: {
+        comment: {
+          body: data?.message?.text,
+          public: true,
+        },
+      },
+    });
+  } else {
+    console.log('No ticket found for conversation', data?.conversation?.id);
+  }
+};

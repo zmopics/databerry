@@ -8,11 +8,13 @@ const defaultCreateServiceProvider = async <
   T extends {} = ServiceProviderSchema
 >({
   name,
+  type,
   session,
   agentId,
   config,
   validate,
 }: {
+  type: ServiceProviderType;
   name?: string;
   config: T;
   agentId?: string;
@@ -47,7 +49,7 @@ const defaultCreateServiceProvider = async <
 
   const integration = await prisma.serviceProvider.create({
     data: {
-      type: ServiceProviderType.zendesk,
+      type: type,
       config: {
         ...config,
       },

@@ -12,6 +12,7 @@ import { fetcher } from '@chaindesk/lib/swr-fetcher';
 import { SSE_EVENT } from '@chaindesk/lib/types';
 import { Source } from '@chaindesk/lib/types/document';
 import type { ChatResponse, EvalAnswer } from '@chaindesk/lib/types/dtos';
+import { MessageMetadataSchema } from '@chaindesk/lib/types/models';
 import type {
   ConversationChannel,
   ConversationStatus,
@@ -44,6 +45,7 @@ export type ChatMessage = {
   sources?: Source[];
   component?: JSX.Element;
   disableActions?: boolean;
+  metadata?: MessageMetadataSchema;
 };
 
 export const ChatContext = createContext<ReturnType<typeof useChat>>({} as any);
@@ -418,6 +420,7 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
             message: message?.text!,
             createdAt: message?.createdAt!,
             sources: message?.sources as Source[],
+            metadata: message?.metadata as MessageMetadataSchema,
           })),
         conversationStatus:
           getConversationQuery.data[0]?.status ?? state.conversationStatus,

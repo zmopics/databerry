@@ -325,7 +325,11 @@ function ChatBox({
                       <Avatar
                         size="sm"
                         variant="outlined"
-                        src={userImgUrl || undefined}
+                        src={
+                          userImgUrl ||
+                          each?.metadata?.profilePicture ||
+                          undefined
+                        }
                       ></Avatar>
                     )}
 

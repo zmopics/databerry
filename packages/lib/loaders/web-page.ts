@@ -8,7 +8,7 @@ import cleanTextForEmbeddings from '../clean-text-for-embeddings';
 
 import { DatasourceLoaderBase } from './base';
 
-export const getTextFromHTML = async (html: string) => {
+export const getTextFromHTML = async (html: string, origin?: string) => {
   const { load } = await import('cheerio');
 
   const $ = load(html);
@@ -20,9 +20,53 @@ export const getTextFromHTML = async (html: string) => {
   $('style').remove();
   $('link').remove();
   $('svg').remove();
-  $('img').remove();
   $('noscript').remove();
-  const text = $('body').text();
+  // $('img').remove();
+  // $('img').removeAttr(' srcSet style data-nimg');
+  // $('img').each(function (_, el) {
+  //   // const attributes = Object.keys(this.attribs);
+  //   // console.log('ATTRIBUTES =-----------><', attributes);
+  //   $(this).removeAttr('style alt').text();
+  //   // attributes.forEach((attr) => {
+  //   //   $(this).removeAttr(attr);
+  //   // });
+  // });
+
+  const items = [] as string[];
+
+  $('body *')
+    .contents()
+    .each((index, child: any) => {
+      if (child.type === 'text') {
+        // If it's a text node, add its text to the array
+        const content = $(child).text().trim();
+        if (content) {
+          items.push($(child).text());
+        }
+      } else if (child?.name === 'img') {
+        // console.log('IMAGE', child.attribs);
+        // If it's an image node, add its src attribute to the array
+        let srcProp = $(child).attr('src');
+
+        console.log('ORIGIN -------------->', origin);
+        if (srcProp) {
+          srcProp = srcProp.replace(/^\/\//, 'https://');
+
+          const src = srcProp?.startsWith('http')
+            ? srcProp
+            : `${origin?.replace(/\/$/, '') || ''}/${srcProp.replace(
+                /^\//,
+                ''
+              )}`;
+
+          items.push(`![${$(child).attr('alt') || 'image'}](${src})`);
+        }
+      }
+    });
+
+  // const text = $('body').text();
+  const text = items.join(' ');
+  console.log('TEXT-------_>', $('body').text());
 
   return text?.trim();
 };
@@ -35,7 +79,7 @@ export const loadPageContent = async (url: string) => {
       },
     });
 
-    const text = await getTextFromHTML(data);
+    const text = await getTextFromHTML(data, new URL(url).origin);
 
     if (!text) {
       throw new Error('Empty body');
@@ -67,7 +111,7 @@ export class WebPageLoader extends DatasourceLoaderBase<DatasourceWebPage> {
 
     const content = await loadPageContent(url);
 
-    const text = await getTextFromHTML(content);
+    const text = await getTextFromHTML(content, new URL(url).origin);
 
     if (!text) {
       throw new ApiError(ApiErrorType.EMPTY_DATASOURCE);

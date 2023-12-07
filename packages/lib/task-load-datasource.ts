@@ -140,6 +140,17 @@ const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
     throw err;
   }
 
+  // await prisma.appDatasource.update({
+  //   where: {
+  //     id: datasource.id,
+  //   },
+  //   data: {
+  //     status: 'synched',
+  //   },
+  // });
+
+  // return;
+
   const hash = await DatastoreManager.hash(documents);
 
   if (hash === datasource.hash) {

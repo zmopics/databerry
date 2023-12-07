@@ -62,6 +62,8 @@ const chatRetrieval = async ({
     maxTokens: ModelConfig?.[modelName!]?.maxTokens * 0.2,
   });
 
+  console.log('RESULTS', results);
+
   const prompt = getPrompt(results);
 
   // Generate answer

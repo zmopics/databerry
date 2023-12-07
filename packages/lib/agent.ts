@@ -297,6 +297,7 @@ export default class AgentManager {
           If the context does not contain the information needed to answer this query then politely say that you don't know without mentioning the existence of a context.
           Remember do not answer any query that is outside of the provided context nor mention its existence.
           You are allowed to use the following conversation history to answer the query.
+          If provided, display images in the answer in markdown format.
           `,
         },
         //         new SystemMessage(
@@ -350,7 +351,7 @@ export default class AgentManager {
             // Message: """ {query} """
 
             // Answer: `,
-            template: `{query}`,
+            template: `{query} Answer in markdown format:`,
             // template: `${_promptTemplate || ''}
             // ${KNOWLEDGE_RESTRICTION}
             // ${ANSWER_IN_SAME_LANGUAGE}

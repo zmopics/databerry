@@ -27,6 +27,24 @@ export const getTextFromHTML = async (html: string) => {
   return text?.trim();
 };
 
+export const getMainDOM = async (html: string) => {
+  const { load } = await import('cheerio');
+
+  const $ = load(html);
+  $('head').remove();
+  $('footer').remove();
+  $('header').remove();
+  $('nav').remove();
+  $('script').remove();
+  $('style').remove();
+  $('link').remove();
+  $('svg').remove();
+  $('img').remove();
+  $('noscript').remove();
+
+  return $('body').html() || '';
+};
+
 export const loadPageContent = async (url: string) => {
   try {
     const { data } = await axios(url, {

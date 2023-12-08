@@ -1,0 +1,94 @@
+text {
+  url: 'https://mabanque.bnpparibas/fr/vos-besoins/vos-projets/transition-energetique-et-ecologique/act-for-impact?perf_origine=ppi02696',
+  thematic: 'Consommation responsable et initiatives écologiques avec Act For Impact de BNP Paribas'
+}
+text {
+  url: 'https://mabanque.bnpparibas/fr/ma-banque-et-moi/nos-applications/nos-comptes-entre-amis',
+  thematic: 'Application de gestion de dépenses partagées entre amis'
+}
+text {
+  url: 'https://mabanque.bnpparibas/fr/ouvrir-un-compte/?agence=EERI',
+  thematic: "Processus d'ouverture de compte en ligne chez BNP Paribas"
+}
+text {
+  url: 'https://mabanque.bnpparibas/fr/ma-banque-et-moi/bienvenue-chez-bnpparibas',
+  thematic: 'Guide de bienvenue avec informations clés sur BNP Paribas'
+}
+text {
+  url: 'https://mabanque.bnpparibas/fr/vos-besoins/votre-situation/etudiant/campus-services-disconnect?perf_origine=tra02274',
+  thematic: 'Offres pour les 18-24 ans, services gratuits pour soutenir la vie étudiante grâce à Campus Services'
+}
+text {
+  url: 'https://mabanque.bnpparibas/fr/gerer/cartes-moyens-paiement/options-services-bancaires/cashback-mes-extras?perf_origine=Mon01759',
+  thematic: "Avantages de cashback avec Mes Extras de BNP Paribas, remboursement d'une partie des dépenses"
+}
+text {
+  url: 'https://mabanque.bnpparibas/fr/gerer/cartes-moyens-paiement/paiement-mobile/apple-pay?perf_origine=Mon01400',
+  thematic: 'Paiement mobile avec Apple Pay pour des transactions sécurisées'
+}
+[
+  {
+    "url": "https://mabanque.bnpparibas/",
+    "links": [
+      {
+        "url": "https://mabanque.bnpparibas/fr/vos-besoins/vos-projets/transition-energetique-et-ecologique/act-for-impact?perf_origine=ppi02696",
+        "thematic": "Consommation responsable et initiatives écologiques avec Act For Impact de BNP Paribas",
+        "output": {
+          "isRelevant": true,
+          "error": ""
+        }
+      },
+      {
+        "url": "https://mabanque.bnpparibas/fr/vos-besoins/votre-situation/etudiant/campus-services-disconnect?perf_origine=tra02274",
+        "thematic": "Offres pour les 18-24 ans, services gratuits pour soutenir la vie étudiante grâce à Campus Services",
+        "output": {
+          "isRelevant": true,
+          "error": ""
+        }
+      },
+      {
+        "url": "https://mabanque.bnpparibas/fr/ouvrir-un-compte/?agence=EERI",
+        "thematic": "Processus d'ouverture de compte en ligne chez BNP Paribas",
+        "output": {
+          "isRelevant": false,
+          "error": "Le texte fourni ne contient aucune information."
+        }
+      },
+      {
+        "url": "https://mabanque.bnpparibas/fr/gerer/cartes-moyens-paiement/paiement-mobile/apple-pay?perf_origine=Mon01400",
+        "thematic": "Paiement mobile avec Apple Pay pour des transactions sécurisées",
+        "output": {
+          "isRelevant": true,
+          "error": ""
+        }
+      },
+      {
+        "url": "https://mabanque.bnpparibas/fr/gerer/cartes-moyens-paiement/options-services-bancaires/cashback-mes-extras?perf_origine=Mon01759",
+        "thematic": "Avantages de cashback avec Mes Extras de BNP Paribas, remboursement d'une partie des dépenses",
+        "output": {
+          "isRelevant": true,
+          "error": ""
+        }
+      },
+      {
+        "url": "https://mabanque.bnpparibas/fr/ma-banque-et-moi/bienvenue-chez-bnpparibas",
+        "thematic": "Guide de bienvenue avec informations clés sur BNP Paribas",
+        "output": {
+          "isRelevant": false,
+          "error": "Le texte fourni traite de la résiliation d'un contrat chez BNP Paribas, ce qui n'est pas pertinent par rapport au thème d'un guide de bienvenue avec des informations clés sur BNP Paribas."
+        }
+      },
+      {
+        "url": "https://mabanque.bnpparibas/fr/ma-banque-et-moi/nos-applications/nos-comptes-entre-amis",
+        "thematic": "Application de gestion de dépenses partagées entre amis",
+        "output": {
+          "isRelevant": false,
+          "error": "Le contenu fourni parle de résiliation de contrat chez BNP Paribas et ne traite pas d'une application de gestion de dépenses partagées entre amis."
+        }
+      }
+    ]
+  }
+]
+[]
+Model used: gpt-4-1106-preview
+syntax-check: 34.062s

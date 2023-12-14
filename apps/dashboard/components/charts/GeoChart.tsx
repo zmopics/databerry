@@ -4,6 +4,7 @@ import {
   Divider,
   Grid,
   LinearProgress,
+  Skeleton,
   Stack,
   Typography,
 } from '@mui/joy';
@@ -14,6 +15,7 @@ type Props = {
   label: string;
   data: any[];
   totalConversation: number;
+  loading?: boolean;
 };
 
 const ProgressBar = ({ total, amount }: { total: number; amount: number }) => {
@@ -110,27 +112,36 @@ const BarChartTable = ({
   );
 };
 
-function GeoChart({ label, data, totalConversation }: Props) {
-  const regionNames = new Intl.DisplayNames(['en'], { type: 'region' });
-  const convertedData = data.map(([country, chats]) => [
-    regionNames.of(country),
+function GeoChart({ label, data, totalConversation, loading = false }: Props) {
+  const converter = new Intl.DisplayNames(['en'], { type: 'region' });
+  const convertedData = data?.map(([country, chats]) => [
+    typeof country === 'string' ? converter.of(country) : '',
+    // converter.of(country),
     chats,
   ]);
   return (
     <Grid container spacing={2} sx={{ flexGrow: 1 }}>
-      <Grid xs={8}>
-        <Chart
-          chartType="GeoChart"
-          height="400px"
-          data={[['Country', label], ...data]}
-        />
-      </Grid>
-      <Grid xs={4}>
-        <BarChartTable
-          data={convertedData}
-          totalConversation={totalConversation}
-        />
-      </Grid>
+      <Skeleton
+        loading={loading}
+        variant="rectangular"
+        width="100%"
+        height="400px"
+        animation="wave"
+      >
+        <Grid xs={8}>
+          <Chart
+            chartType="GeoChart"
+            height="400px"
+            data={[['Country', label], ...data]}
+          />
+        </Grid>
+        <Grid xs={4}>
+          <BarChartTable
+            data={convertedData}
+            totalConversation={totalConversation}
+          />
+        </Grid>
+      </Skeleton>
     </Grid>
   );
 }

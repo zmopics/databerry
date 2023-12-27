@@ -11,7 +11,7 @@ export default async function handler(
     console.log('--------------------', code);
     // Exchange code for access token
     const tokenResponse = await fetch(
-      `https://graph.facebook.com/v17.0/oauth/access_token?client_id=2606178422868746&client_secret=4f2c9cca092bbd6da8a1cb52b043b7a2&code=${code}&redirect_uri=https://localhost:3000/test
+      `https://graph.facebook.com/v17.0/oauth/access_token?client_id=2606178422868746&client_secret=4f2c9cca092bbd6da8a1cb52b043b7a2&code=${code}&redirect_uri=
       `,
       {
         method: 'GET',

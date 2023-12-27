@@ -154,6 +154,7 @@ function AgentDeployTab(props: Props) {
   const handleFBLogin = () => {
     FB?.login(
       (response) => {
+        console.log('RESPONSE -------------->', response);
         if (response.authResponse) {
           console.log('Success:', response);
           const callApi = async () => {
@@ -170,9 +171,10 @@ function AgentDeployTab(props: Props) {
         }
       },
       {
-        scope: 'whatsapp_business_management,whatsapp_business_messaging',
+        // scope: 'whatsapp_business_management,whatsapp_business_messaging',
         config_id: '1847795065634880',
         response_type: 'code',
+        override_default_response_type: true,
       }
     );
   };
@@ -416,6 +418,13 @@ function AgentDeployTab(props: Props) {
             </ListItem>
           ))}
         </List>
+
+        <h1>test</h1>
+
+        {/* <fb:login-button
+          config_id="{config_id}"
+          onlogin="checkLoginState();"
+        ></fb:login-button> */}
       </SettingCard>
       <button onClick={launchWhatsAppSignup}>Click me</button>
 

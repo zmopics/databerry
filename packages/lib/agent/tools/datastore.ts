@@ -37,14 +37,15 @@ export const handler = async (props: Props) => {
     datasource_ids: filterDatasourceIds,
   } as Props['filters'];
 
-  const _results = (
-    await retrieval({
-      // datastore,
-      filters: _filters,
-      topK: props.topK || 5,
-      query: props.query,
-    })
-  ).filter((each) => each.metadata.score > (props.similarityThreshold || 0));
+  const _results = await retrieval({
+    // datastore,
+    filters: _filters,
+    topK: props.topK || 5,
+    query: props.query,
+  });
+
+  console.log('RESULT----------->', _results);
+  // .filter((each) => each.metadata.score > (props.similarityThreshold || 0));
 
   const results = await truncateArray<AppDocument<ChunkMetadataRetrieved>>({
     items: _results,

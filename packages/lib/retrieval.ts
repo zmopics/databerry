@@ -16,6 +16,7 @@ const retrieval = async (props: RetrievalProps) => {
   let results: AppDocument<ChunkMetadataRetrieved>[] = [];
 
   if (props.datastore) {
+    console.log('called-1111');
     const store = new DatastoreManager(props.datastore);
     results = await store.search({
       query: props.query,
@@ -27,6 +28,7 @@ const retrieval = async (props: RetrievalProps) => {
     props.filters?.datasource_ids?.length ||
     props.filters?.datastore_ids?.length
   ) {
+    console.log('called-2222');
     // Support for Multi-datastore search
     // TODO: need to be refactored if other vector db provider are used in the future
     results = await QdrantManager._search({

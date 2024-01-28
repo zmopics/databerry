@@ -1,11 +1,14 @@
 import axios, { AxiosError, AxiosInstance } from 'axios';
-import { Embeddings } from 'langchain/embeddings/base';
-import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
+// import { Embeddings } from 'langchain/embeddings/base';
+// import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
+import OpenAI from 'openai';
+import { EmbeddingCreateParams } from 'openai/resources';
+import pRetry from 'p-retry';
 import { z } from 'zod';
 
 import { Datastore } from '@chaindesk/prisma';
 
-import { embedDocuments as embedDocumentsMock } from '../mocks';
+// import { embedDocuments as embedDocumentsMock } from '../mocks';
 import { MetadataFields } from '../types';
 import {
   AppDocument,
@@ -32,15 +35,26 @@ export type Point = {
   };
 };
 
-const initEmbeddingModel = () => {
-  const embeddings = new OpenAIEmbeddings();
-
-  if (process.env.APP_ENV === 'test') {
-    embeddings.embedDocuments = embedDocumentsMock;
-  }
-
-  return embeddings;
+const createEmbeddings = async (props: EmbeddingCreateParams) => {
+  return pRetry(
+    async () => {
+      return new OpenAI().embeddings.create(props);
+    },
+    {
+      retries: 6,
+    }
+  );
 };
+
+// const initEmbeddingModel = () => {
+//   const embeddings = new OpenAIEmbeddings();
+
+//   if (process.env.APP_ENV === 'test') {
+//     embeddings.embedDocuments = embedDocumentsMock;
+//   }
+
+//   return embeddings;
+// };
 
 const initHTTPClient = () =>
   axios.create({
@@ -52,12 +66,12 @@ const initHTTPClient = () =>
 
 export class QdrantManager extends ClientManager<DatastoreType> {
   client: AxiosInstance;
-  embeddings: Embeddings;
+  // embeddings: Embeddings;
 
   constructor(datastore: DatastoreType) {
     super(datastore);
 
-    this.embeddings = initEmbeddingModel();
+    // this.embeddings = initEmbeddingModel();
     this.client = initHTTPClient();
   }
 
@@ -134,8 +148,13 @@ export class QdrantManager extends ClientManager<DatastoreType> {
       })
     );
 
+    const { data } = await createEmbeddings({
+      model: 'text-embedding-3-small',
+      input: texts,
+    });
+
     return this.addVectors(
-      await this.embeddings.embedDocuments(texts),
+      data.map((each) => each.embedding),
       nonEmptyDocs,
       nonEmptyIds
     );
@@ -270,11 +289,16 @@ export class QdrantManager extends ClientManager<DatastoreType> {
   }
 
   static async _search(props: SearchRequestSchema & { datastore_id?: string }) {
-    const vectors = await initEmbeddingModel().embedDocuments([props.query]);
+    // const vectors = await initEmbeddingModel().embedDocuments([props.query]);
+    const { data } = await createEmbeddings({
+      model: 'text-embedding-3-small',
+      input: [props.query],
+    });
+
     const results = await initHTTPClient().post(
       `/collections/text-embedding-ada-002/points/search`,
       {
-        vector: vectors[0],
+        vector: data?.[0]?.embedding,
         limit: props.topK,
         with_payload: true,
         with_vectors: false,

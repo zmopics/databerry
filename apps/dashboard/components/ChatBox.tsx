@@ -507,7 +507,7 @@ function ChatBox({
 
                         )} */}
 
-                            <Markdown>{each.message}</Markdown>
+                            <Markdown from={each.from}>{each.message}</Markdown>
 
                             {each?.component}
 
